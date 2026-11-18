@@ -36,6 +36,15 @@ npx skills add athNdev/draftward --skill '*'
 
 Select your harness when prompted. Versioned downloads are available from [GitHub Releases](https://github.com/athNdev/draftward/releases/latest).
 
+In Claude Code, you can also install the full plugin from Draftward's GitHub marketplace:
+
+```text
+/plugin marketplace add athNdev/draftward
+/plugin install draftward@draftward
+```
+
+For OpenClaw, install the [standalone Draftward skill](https://clawhub.ai/athndev/skills/draftward) from ClawHub.
+
 ### Manual install
 
 1. Clone this repository or download and extract its ZIP from GitHub.

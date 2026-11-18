@@ -1,0 +1,14 @@
+{
+  "name": "draftward",
+  "description": "Agent skills for drafting, reviewing, and verifying formal reports.",
+  "owner": {
+    "name": "athNdev"
+  },
+  "plugins": [
+    {
+      "name": "draftward",
+      "source": "./",
+      "description": "Draft, review, and verify formal reports from brief to final PDF."
+    }
+  ]
+}
