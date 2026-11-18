@@ -1,0 +1,15 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Draft and revise",
+      "description": "Build a formal report from its brief and improve the argument and prose.",
+      "skills": ["report-drafting", "report-review", "report-clarity"]
+    },
+    {
+      "title": "Verify and release",
+      "description": "Trace report claims back to their sources and verify the final PDF.",
+      "skills": ["report-evidence", "report-release"]
+    }
+  ]
+}

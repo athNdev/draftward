@@ -6,7 +6,7 @@ GitHub is Draftward's source of truth. The release workflow builds a plugin ZIP 
 
 1. For a preview, run [Distribute Draftward](https://github.com/athNdev/draftward/actions/workflows/distribute.yml) from `main` with a stable tag such as `v0.1.0`. Download the `draftward-release` artifact, or choose **Create a GitHub draft release** to attach the ZIPs and checksums to a draft.
 2. To build locally, run `python .github/scripts/validate.py` and `python .github/scripts/package_release.py v0.1.0 dist`.
-3. Before publishing, verify the [MIT-0 licence](LICENSE) is included, review the files intended for public release, and update both repository plugin manifests to the release version. Test the plugin on the intended host with the full five-skill set.
+3. Before publishing, verify the [MIT-0 licence](LICENSE) is included, review the public release files, and update the portable, Claude, and Cursor manifests to the release version. Test the plugin on the intended host with the full five-skill set.
 4. Add the registry secrets below. On the public repository, use **Check registry** in the dispatch form to verify each credential without publishing.
 5. Set the repository Actions variable `ENABLE_PUBLIC_SKILL_RELEASES` to `true` to publish from stable GitHub releases. The workflow checks live GitHub visibility. A job warns and skips its registry when the corresponding secret is missing.
 
@@ -25,4 +25,8 @@ GitHub is Draftward's source of truth. The release workflow builds a plugin ZIP 
 | [LobeHub Skills Marketplace](https://lobehub.com/docs/usage/community/become-a-creator) | Select the public GitHub repo in the creator submission flow. |
 | [Skills Directory](https://www.skillsdirectory.com/) | Submit the public source through the directory's review form. |
 
-Check each listing after acceptance. Directory approval, indexing, and installation are separate from building the release. Keep the repository private until the owner approves public distribution.
+## Verify accepted listings
+
+Use **Draftward** as the display name, **Agent skills for drafting, reviewing, and verifying formal reports.** as the short description, and the public GitHub repository as the source link. Use the [512 × 512 avatar](assets/draftward-avatar.png) for square icons and the [1280 × 640 social card](assets/draftward-social.png) for wide previews. Use the existing platform icon where the listing has no custom image field.
+
+After acceptance, open the public listing while signed out and check the name, publisher, image, source, licence, and release version where shown. Follow the advertised installation instructions in a fresh environment and check that all five workflows and their shared references are available.
