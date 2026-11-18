@@ -11,6 +11,11 @@ on:
         description: Create a GitHub draft release with the archives attached
         default: false
         type: boolean
+      check_registry:
+        description: Verify a configured registry credential without publishing
+        type: choice
+        options: [none, clawhub, sundial]
+        default: none
   release:
     types: [published]
 
@@ -73,9 +78,9 @@ jobs:
   publish:
     needs: package
     if: >-
-      github.event_name == 'release' &&
       github.event.repository.private == false &&
-      vars.ENABLE_PUBLIC_SKILL_RELEASES == 'true'
+      ((github.event_name == 'release' && vars.ENABLE_PUBLIC_SKILL_RELEASES == 'true') ||
+      (github.event_name == 'workflow_dispatch' && inputs.check_registry != 'none'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
@@ -87,17 +92,39 @@ jobs:
           - registry: sundial
             token: SUNDIAL_TOKEN
     env:
-      RELEASE_TAG: ${{ github.event.release.tag_name }}
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
       REGISTRY: ${{ matrix.registry }}
+      CHECK_ONLY: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
+      - name: Select configured registry
+        id: selection
+        env:
+          REQUESTED_REGISTRY: ${{ inputs.check_registry }}
+          HAS_TOKEN: ${{ secrets[matrix.token] != '' }}
+        run: |
+          if [[ "$CHECK_ONLY" == true && "$REQUESTED_REGISTRY" != "$REGISTRY" ]]; then
+            exit 0
+          fi
+          if [[ "$HAS_TOKEN" != true ]]; then
+            if [[ "$CHECK_ONLY" == true ]]; then
+              echo "::error::Add the GitHub Actions secret for $REGISTRY before checking it."
+              exit 1
+            fi
+            echo "::warning::$REGISTRY was skipped because its GitHub Actions secret is missing."
+            exit 0
+          fi
+          echo "run=true" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        if: steps.selection.outputs.run == 'true'
         with:
           name: draftward-release
           path: dist
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        if: steps.selection.outputs.run == 'true'
         with:
           node-version: '24'
       - name: Check licence and source visibility
+        if: steps.selection.outputs.run == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           LICENSED: ${{ needs.package.outputs.licensed }}
@@ -114,23 +141,30 @@ jobs:
           fi
           (cd dist && sha256sum --check SHA256SUMS)
           unzip -q "dist/draftward-skill-${RELEASE_TAG#v}.zip" -d dist
-      - name: Publish to registry
+      - name: Verify or publish to registry
+        if: steps.selection.outputs.run == 'true'
         env:
           REGISTRY_TOKEN: ${{ secrets[matrix.token] }}
         run: |
-          if [[ -z "$REGISTRY_TOKEN" ]]; then
-            echo "::error::Add the publishing token for $REGISTRY as a GitHub Actions secret."
-            exit 1
-          fi
           case "$REGISTRY" in
             clawhub)
               npx --yes clawhub@0.26.0 --no-input login --token "$REGISTRY_TOKEN"
+              if [[ "$CHECK_ONLY" == true ]]; then
+                npx --yes clawhub@0.26.0 --no-input whoami
+                npx --yes clawhub@0.26.0 --no-input skill publish dist/draftward \
+                  --slug draftward --name Draftward --version "${RELEASE_TAG#v}" --dry-run
+                exit 0
+              fi
               npx --yes clawhub@0.26.0 --no-input skill publish dist/draftward \
                 --slug draftward --name Draftward --version "${RELEASE_TAG#v}"
               ;;
             sundial)
-              SUNDIAL_TOKEN="$REGISTRY_TOKEN" SUNDIAL_DISABLE_TELEMETRY=1 \
-                npx --yes --package sundial-hub@0.1.20 sun push dist/draftward \
+              export SUNDIAL_TOKEN="$REGISTRY_TOKEN" SUNDIAL_DISABLE_TELEMETRY=1
+              if [[ "$CHECK_ONLY" == true ]]; then
+                npx --yes --package sundial-hub@0.1.20 sun auth status
+                exit 0
+              fi
+              npx --yes --package sundial-hub@0.1.20 sun push dist/draftward \
                 --skill-version "${RELEASE_TAG#v}" --visibility public --changelog "Draftward $RELEASE_TAG"
               ;;
           esac

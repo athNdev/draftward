@@ -7,7 +7,8 @@ GitHub is Draftward's source of truth. The release workflow builds a plugin ZIP 
 1. For a preview, run [Distribute Draftward](https://github.com/athNdev/draftward/actions/workflows/distribute.yml) from `main` with a stable tag such as `v0.1.0`. Download the `draftward-release` artifact, or choose **Create a GitHub draft release** to attach the ZIPs and checksums to a draft.
 2. To build locally, run `python .github/scripts/validate.py` and `python .github/scripts/package_release.py v0.1.0 dist`.
 3. Before publishing, verify the [MIT-0 licence](LICENSE) is included, review the files intended for public release, and update both repository plugin manifests to the release version. Test the plugin on the intended host with the full five-skill set.
-4. If the owner has made the repository public, enable registry distribution by setting the repository Actions variable `ENABLE_PUBLIC_SKILL_RELEASES` to `true`. Add the registry secrets below. Publishing a stable GitHub release triggers registry jobs for that release tag. The workflow checks live GitHub visibility before sending a package.
+4. Add the registry secrets below. On the public repository, use **Check registry** in the dispatch form to verify each credential without publishing.
+5. Set the repository Actions variable `ENABLE_PUBLIC_SKILL_RELEASES` to `true` to publish from stable GitHub releases. The workflow checks live GitHub visibility. A job warns and skips its registry when the corresponding secret is missing.
 
 ## Channels
 

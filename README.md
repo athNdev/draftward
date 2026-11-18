@@ -6,6 +6,8 @@
 
 Draftward helps you draft academic, technical, and professional reports. It connects requirements to sections and claims to evidence, so you can see what the draft covers and where it needs work. The skills follow the [Agent Skills format](https://agentskills.io/specification).
 
+For review and revision, Draftward tracks the author's decisions and points to the exact passages in the current PDF that still need attention.
+
 ## Choose a skill
 
 | Skill | Use it when you want to |
@@ -25,6 +27,16 @@ The [standards guide](skills/report-drafting/references/report-standards.md) poi
 The [companion skills guide](skills/report-drafting/references/companion-tools.md) shows how to use separately installed citation and document skills alongside Draftward.
 
 ## Install
+
+Run this from your report project to install all five skills in a supported harness:
+
+```sh
+npx skills add athNdev/draftward --skill '*'
+```
+
+Select your harness when prompted. Versioned downloads are available from [GitHub Releases](https://github.com/athNdev/draftward/releases/latest).
+
+### Manual install
 
 1. Clone this repository or download and extract its ZIP from GitHub.
 2. Copy the five folders **inside** [`skills/`](skills/) into your harness's project skill directory. Keep them together so their shared references resolve.
@@ -56,5 +68,6 @@ The [brand guide](assets/README.md) includes the identity sheet, logo exports, a
 
 See [Contributing](CONTRIBUTING.md) for changes to skills and the standards guide.
 See [Distribution](DISTRIBUTION.md) for release packages and marketplace submission paths.
+Use [GitHub Discussions](https://github.com/athNdev/draftward/discussions) for workflow questions and examples.
 
 Draftward is licensed under [MIT-0](LICENSE).
