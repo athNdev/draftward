@@ -16,7 +16,7 @@ GitHub is Draftward's source of truth. The release workflow builds a plugin ZIP 
 | GitHub Releases | Build and attach both archives to a draft, then publish the draft when approved. |
 | [ClawHub](https://docs.openclaw.ai/clawhub/publishing) | The workflow submits the standalone `draftward` skill with `CLAWHUB_TOKEN`. ClawHub applies [MIT-0](https://docs.openclaw.ai/clawhub/skill-format#license), so set `CLAWHUB_MIT0_ACCEPTED=true` only after approving those terms for this distribution. ClawHub scans the submitted version before it becomes installable. |
 | [Sundial Hub](https://github.com/sundial-org/skills/blob/main/skills/skill/SKILL.md#publish-a-skill) | The workflow submits the standalone version using `SUNDIAL_TOKEN`. |
-| [skills.sh](https://www.skills.sh/docs) | Once GitHub is public, install all five together with `npx skills add athNdev/draftward --all`. The leaderboard uses real install telemetry. |
+| [skills.sh](https://www.skills.sh/docs) | Once GitHub is public, run `npx skills add athNdev/draftward --skill '*'` and select your harness. The leaderboard uses real install telemetry. |
 | [SkillsMP](https://skillsmp.com/docs/api) | The public GitHub source is ready for indexing. The documented API searches existing listings. |
 | [Claude and Claude Code directory](https://claude.com/resources/articles/build-plugins-for-claude) | Submit the GitHub plugin repository in Anthropic's directory portal. The repo includes the Claude plugin manifest. Directory submission requires an eligible account and review. |
 | [ChatGPT and Codex directory](https://developers.openai.com/plugins/deploy/submission) | Upload the versioned plugin ZIP as **Skills only**. Complete listing metadata, test the install, and submit for review in the portal. |
