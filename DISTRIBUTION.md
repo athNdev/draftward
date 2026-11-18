@@ -12,6 +12,8 @@ GitHub is Draftward's source of truth. The release workflow builds a plugin ZIP 
 
 ## Channels
 
+The [marketplace submission checklist](SUBMISSION.md) groups the account and review steps into two batches and includes shared listing assets.
+
 | Channel | Delivery |
 | --- | --- |
 | GitHub Releases | Build and attach both archives to a draft, then publish the draft when approved. |

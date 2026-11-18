@@ -11,7 +11,17 @@
     "com.openai": {
       "interface": {
         "displayName": "Draftward",
-        "shortDescription": "Draft and verify formal reports",
+        "shortDescription": "Formal report skills",
+        "longDescription": "Draftward helps students, researchers, and professionals draft, revise, and verify formal reports. Turn a brief and supplied evidence into a draft, check claims and reporting requirements, and review unresolved decisions against the current PDF. The skills work with your report files and available build tools. They help record which checks were performed and which requirements remain unverified.",
+        "developerName": "athNdev",
+        "category": "Productivity",
+        "websiteURL": "https://github.com/athNdev/draftward",
+        "supportURL": "https://github.com/athNdev/draftward/issues",
+        "defaultPrompt": [
+          "Draft a technical report outline from this brief and test summary.",
+          "Review this draft against the supplied rubric and identify the most important revisions.",
+          "Verify that the findings and limitations in this report match the supplied evidence."
+        ],
         "composerIcon": "./assets/draftward-avatar.png",
         "logo": "./assets/draftward-avatar.png",
         "brandColor": "#16293B"
