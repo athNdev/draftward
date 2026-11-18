@@ -1,0 +1,136 @@
+name: Distribute Draftward
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Stable version tag such as v1.0.0
+        required: true
+        type: string
+      create_draft:
+        description: Create a GitHub draft release with the archives attached
+        default: false
+        type: boolean
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: draftward-release-${{ github.event.release.tag_name || inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'release' && !github.event.release.prerelease)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      licensed: ${{ steps.build.outputs.licensed }}
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Validate and build archives
+        id: build
+        run: |
+          python3 .github/scripts/validate.py
+          python3 .github/scripts/package_release.py "$RELEASE_TAG" dist
+          if test -s LICENSE; then
+            echo "licensed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: draftward-release
+          path: dist/
+          if-no-files-found: error
+
+  draft:
+    needs: package
+    if: github.event_name == 'workflow_dispatch' && inputs.create_draft
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: draftward-release
+          path: dist
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          gh release create "$RELEASE_TAG" dist/*.zip dist/SHA256SUMS \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft --generate-notes
+
+  publish:
+    needs: package
+    if: >-
+      github.event_name == 'release' &&
+      github.event.repository.private == false &&
+      vars.ENABLE_PUBLIC_SKILL_RELEASES == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - registry: clawhub
+            token: CLAWHUB_TOKEN
+          - registry: sundial
+            token: SUNDIAL_TOKEN
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
+      REGISTRY: ${{ matrix.registry }}
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: draftward-release
+          path: dist
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Check licence and source visibility
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LICENSED: ${{ needs.package.outputs.licensed }}
+          CLAWHUB_MIT0_ACCEPTED: ${{ vars.CLAWHUB_MIT0_ACCEPTED }}
+        run: |
+          test "$(gh api "repos/$GITHUB_REPOSITORY" --jq .visibility)" = public
+          if [[ "$LICENSED" != true ]]; then
+            echo "::error::The release tag must include an owner-approved LICENSE."
+            exit 1
+          fi
+          if [[ "$REGISTRY" == clawhub && "$CLAWHUB_MIT0_ACCEPTED" != true ]]; then
+            echo "::error::ClawHub publishes under MIT-0. Explicit owner opt-in is required."
+            exit 1
+          fi
+          (cd dist && sha256sum --check SHA256SUMS)
+          unzip -q "dist/draftward-skill-${RELEASE_TAG#v}.zip" -d dist
+      - name: Publish to registry
+        env:
+          REGISTRY_TOKEN: ${{ secrets[matrix.token] }}
+        run: |
+          if [[ -z "$REGISTRY_TOKEN" ]]; then
+            echo "::error::Add the publishing token for $REGISTRY as a GitHub Actions secret."
+            exit 1
+          fi
+          case "$REGISTRY" in
+            clawhub)
+              npx --yes clawhub@0.26.0 --no-input login --token "$REGISTRY_TOKEN"
+              npx --yes clawhub@0.26.0 --no-input skill publish dist/draftward \
+                --slug draftward --name Draftward --version "${RELEASE_TAG#v}"
+              ;;
+            sundial)
+              SUNDIAL_TOKEN="$REGISTRY_TOKEN" SUNDIAL_DISABLE_TELEMETRY=1 \
+                npx --yes --package sundial-hub@0.1.20 sun push dist/draftward \
+                --skill-version "${RELEASE_TAG#v}" --visibility public --changelog "Draftward $RELEASE_TAG"
+              ;;
+          esac

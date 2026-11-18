@@ -24,11 +24,19 @@ The [standards guide](skills/report-drafting/references/report-standards.md) poi
 
 The [companion skills guide](skills/report-drafting/references/companion-tools.md) shows how to use separately installed citation and document skills alongside Draftward.
 
-## Install in Codex
+## Install
 
 1. Clone this repository or download and extract its ZIP from GitHub.
-2. In your report project, create `.agents/skills/` if needed. Copy the folders **inside** [`skills/`](skills/) into it, so each entry point is at `.agents/skills/<skill-name>/SKILL.md`. Keep the folders together so their shared guidance remains available.
-3. Open the report project in Codex and mention the skill you want to use. See [Codex skill discovery and invocation](https://learn.chatgpt.com/docs/build-skills).
+2. Copy the five folders **inside** [`skills/`](skills/) into your harness's project skill directory. Keep them together so their shared references resolve.
+3. Open the report project in the harness and select the skill by name. PDF rebuilds and visual checks depend on the build and document tools available to that harness.
+
+| Harness | Project skill directory |
+| --- | --- |
+| [Codex](https://learn.chatgpt.com/docs/build-skills) | `.agents/skills/` |
+| [Claude Code](https://code.claude.com/docs/en/skills) | `.claude/skills/` |
+| [GitHub Copilot in VS Code](https://code.visualstudio.com/docs/agent-customization/agent-skills) | `.github/skills/` |
+
+The same Markdown instructions can be used in other Agent Skills-compatible harnesses. Use that harness's documented location and test discovery and linked resources before relying on it.
 
 ## Example prompts
 
@@ -47,3 +55,6 @@ Each skill starts at `skills/<skill-name>/SKILL.md`, with supporting guidance in
 The [brand guide](assets/README.md) includes the identity sheet, logo exports, and editable ArtCraft source.
 
 See [Contributing](CONTRIBUTING.md) for changes to skills and the standards guide.
+See [Distribution](DISTRIBUTION.md) for release packages and marketplace submission paths.
+
+Draftward is licensed under [MIT-0](LICENSE).

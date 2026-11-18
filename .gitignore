@@ -4,3 +4,7 @@
 # Local OS metadata
 .DS_Store
 Thumbs.db
+
+# Locally built release archives
+/dist/
+__pycache__/

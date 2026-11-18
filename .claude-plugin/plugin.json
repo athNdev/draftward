@@ -1,0 +1,8 @@
+{
+  "name": "draftward",
+  "version": "0.1.0",
+  "description": "Agent skills for drafting, reviewing, and verifying formal reports.",
+  "author": {"name": "athNdev"},
+  "repository": "https://github.com/athNdev/draftward",
+  "license": "MIT-0"
+}
