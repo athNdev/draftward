@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="256" viewBox="0 0 256 256">
+  <title>Transparent mark</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <path id="Index_tab" data-name="Index tab" d="M153.04 69.92 L180.08 69.92 C186.944 69.92 192.56 75.536 192.56 82.4 L192.56 121.92 L153.04 113.6 Z" fill="#a44331"/>
+    <path id="Folded_folio" data-name="Folded folio" d="M59.44 94.88 L155.12 44.96 C163.856 40.384 173.84 46.832 173.84 56.608 L173.84 107.36 L159.28 107.36 L159.28 58.272 L65.68 107.36 Z" fill="#16293b"/>
+    <path id="Draftward_D" data-name="Draftward D" d="M59.44 94.88 L130.16 94.88 C167.6 94.88 198.8 116.304 198.8 148.96 C198.8 184.112 170.928 205.12 130.16 205.12 L59.44 205.12 Z M92.72 121.92 L92.72 178.08 L128.08 178.08 C152.624 178.08 165.52 167.056 165.52 148.96 C165.52 132.112 152 121.92 128.08 121.92 Z" fill="#16293b"/>
+  </g>
+</svg>

@@ -1,0 +1,6 @@
+# Generated skill archives
+*.skill
+
+# Local OS metadata
+.DS_Store
+Thumbs.db

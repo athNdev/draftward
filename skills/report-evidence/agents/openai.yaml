@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report Evidence"
+  short_description: "Verify claims, result provenance and cited sources"
+  default_prompt: "Use $report-evidence to verify this report's claims, latest results, references and evidence limits."

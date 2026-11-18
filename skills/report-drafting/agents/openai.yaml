@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report Drafting"
+  short_description: "Draft a formal report from its brief and evidence"
+  default_prompt: "Use $report-drafting to draft a formal report from this brief and evidence, and identify the reporting requirements that apply."

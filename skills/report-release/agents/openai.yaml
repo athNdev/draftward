@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report Release"
+  short_description: "Rebuild and verify the final report and page mapping"
+  default_prompt: "Use $report-release to export this report and verify its final PDF and review-page locations."

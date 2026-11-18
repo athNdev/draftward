@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report Clarity"
+  short_description: "Review reader context, argument flow and report prose"
+  default_prompt: "Use $report-clarity to improve this report while preserving its meaning and established voice."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report Review"
+  short_description: "Plan and execute traceable report review iterations"
+  default_prompt: "Use $report-review to review this report against its requirements and organise the next iteration."
